@@ -1,4 +1,4 @@
-import { OrbitControls } from "@react-three/drei";
+import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import "./App.css";
 import { MyRoom } from "./MyRoom";
@@ -11,6 +11,7 @@ function ThreeScene() {
       <pointLight position={[-3, -3, 2]} />
       <OrbitControls target={[0, 0, 0]} />
       <axesHelper />
+      <Environment files={'studio.hdr'}  />
 
       <MyRoom />
     </Canvas>
