@@ -32,11 +32,11 @@ function ThreeScene() {
         shadow-bias={-0.00001}
       /> */}
       <OrbitControls
-        minDistance={3.25}
-        maxDistance={5.5}
-        // Don't allow going below the room
-        maxPolarAngle={Math.PI / 2}
-        enablePan={false}
+      // minDistance={3.25}
+      // maxDistance={5.5}
+      // // Don't allow going below the room
+      // maxPolarAngle={Math.PI / 2}
+      // enablePan={false}
       />
       <axesHelper />
       <Environment files={"studio.hdr"} />
