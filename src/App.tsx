@@ -1,8 +1,8 @@
-import { Environment, OrbitControls, useHelper } from "@react-three/drei";
+import { OrbitControls, useHelper } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useControls } from "leva";
 import { useRef } from "react";
-import { CameraHelper, PerspectiveCamera } from "three";
+import { CameraHelper, PerspectiveCamera, sRGBEncoding } from "three";
 import "./App.css";
 import { MyRoom } from "./MyRoom";
 
@@ -17,13 +17,13 @@ function ThreeScene() {
   return (
     <>
       {/* <ambientLight /> */}
-      <pointLight
+      {/* <pointLight
         position={[5, 5, 5]}
         castShadow
         shadow-mapSize-height={2048}
         shadow-mapSize-width={2048}
         shadow-bias={-0.00004}
-      />
+      /> */}
       {/* <pointLight
         position={[-3, -3, 2]}
         castShadow
@@ -39,7 +39,7 @@ function ThreeScene() {
       // enablePan={false}
       />
       <axesHelper />
-      <Environment files={"studio.hdr"} />
+      {/* <Environment files={"studio.hdr"} /> */}
       <fog attach="fog" args={[fogColor]} near={6} far={10} />
 
       <MyRoom />
@@ -50,7 +50,11 @@ function ThreeScene() {
 function App() {
   return (
     <div className="App h-screen">
-      <Canvas shadows camera={{ position: [3, 2.5, 2.2] }}>
+      <Canvas
+        shadows
+        camera={{ position: [3, 2.5, 2.2] }}
+        gl={{ outputEncoding: sRGBEncoding }}
+      >
         <ThreeScene />
       </Canvas>
     </div>
