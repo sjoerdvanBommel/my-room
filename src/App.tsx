@@ -1,4 +1,9 @@
-import { OrbitControls, useHelper } from "@react-three/drei";
+import {
+  Environment,
+  OrbitControls,
+  Stage,
+  useHelper,
+} from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useControls } from "leva";
 import { useRef } from "react";
@@ -13,6 +18,8 @@ function ThreeScene() {
 
   const shadowCameraRef = useRef<PerspectiveCamera>(null!);
   useHelper(shadowCameraRef, CameraHelper);
+
+  const controlsRef = useRef(null!);
 
   return (
     <>
@@ -37,12 +44,20 @@ function ThreeScene() {
         // Don't allow going below the room
         maxPolarAngle={Math.PI / 2 - 0.1}
         enablePan={false}
+        ref={controlsRef}
       />
       <axesHelper />
-      {/* <Environment files={"studio.hdr"} /> */}
-      <fog attach="fog" args={[fogColor]} near={6} far={10} />
-
-      <MyRoom />
+      <Environment files={"studio.hdr"} />
+      <fog attach="fog" args={[fogColor]} near={6} far={50} />
+      <Stage
+        shadows
+        intensity={1}
+        environment="city"
+        preset="rembrandt"
+        controls={controlsRef}
+      >
+        <MyRoom />
+      </Stage>
     </>
   );
 }
