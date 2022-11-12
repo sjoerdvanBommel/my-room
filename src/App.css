@@ -40,3 +40,13 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+body {
+  background: black;
+  background-image: radial-gradient(#333 1px, transparent 0);
+  background-size: 30px 30px;
+}
+
+#root {
+  background: radial-gradient(#41414a90, #00000990);
+}

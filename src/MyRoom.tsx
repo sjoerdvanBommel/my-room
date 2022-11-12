@@ -1,13 +1,14 @@
-import { useGLTF, useTexture } from "@react-three/drei";
-import { useControls } from "leva";
-import { useEffect } from "react";
-import { Color, Mesh, MeshBasicMaterial, sRGBEncoding, Texture } from "three";
+import { Html, useGLTF, useTexture } from "@react-three/drei";
+import { useEffect, useRef } from "react";
+import { Mesh, MeshBasicMaterial, sRGBEncoding, Texture } from "three";
 
 const BAKED_POSTFIX = "_baked";
 const SCREEN_POSTFIX = "_screen";
+const GLASS_POSTFIX = "_glass";
 
 export const MyRoom = () => {
   const gltf = useGLTF("./my room.glb");
+  const boxGltf = useGLTF("./box.glb");
 
   const texturePaths: string[] = [];
   gltf.scene.traverse((child) => {
@@ -18,7 +19,6 @@ export const MyRoom = () => {
     }
   });
 
-  const { backgroundColor } = useControls({ backgroundColor: "#96B9D3" });
   const textures = useTexture(
     texturePaths.map((x) => `./textures/${x}.jpg`),
     (textures) => {
@@ -38,7 +38,18 @@ export const MyRoom = () => {
         //     metalness: 1,
         //   });
         // }
-        if (
+        if (child instanceof Mesh && child.name.endsWith(GLASS_POSTFIX)) {
+          // child.material = new MeshPhysicalMaterial({
+          //   color: "white",
+          //   emissive: "white",
+          //   emissiveIntensity: 2,
+          // });
+        } else if (
+          child instanceof Mesh &&
+          child.name.endsWith(SCREEN_POSTFIX)
+        ) {
+          child.material = new MeshBasicMaterial({ color: "black" });
+        } else if (
           child instanceof Mesh &&
           texturePaths.find(
             (x) =>
@@ -66,12 +77,34 @@ export const MyRoom = () => {
     }
   }, [gltf]);
 
-  useEffect(() => {
-    const object = gltf?.scene.getObjectByName("BackgroundFloor");
-    if (object instanceof Mesh) {
-      object.material.color = new Color(backgroundColor);
-    }
-  }, [backgroundColor]);
+  const tvScreen = gltf.scene.getObjectByName("TV_screen");
+  const gltfRef = useRef(null!);
 
-  return <primitive object={gltf.scene} />;
+  return (
+    <>
+      <primitive object={boxGltf.scene} />
+      <primitive object={gltf.scene} ref={gltfRef} />
+      <Html
+        transform
+        center
+        scale={0.055}
+        position={[
+          tvScreen!.position.x,
+          tvScreen!.position.y + 0.3,
+          tvScreen!.position.z - 0.05,
+        ]}
+        rotation={[
+          tvScreen!.rotation.x,
+          tvScreen!.rotation.y + Math.PI,
+          tvScreen!.rotation.z,
+        ]}
+        occlude={[gltfRef]}
+      >
+        <img
+          src="./netflix-intro.gif"
+          className="w-[692px] max-w-none select-none pointer-events-none"
+        />
+      </Html>
+    </>
+  );
 };
